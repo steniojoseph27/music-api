@@ -3,3 +3,7 @@
 ################################################################################
 
 /.vs
+/MusicApi/.vs
+/MusicApi/MusicApi/Properties
+/MusicApi/MusicApi/bin/Debug/net5.0
+/MusicApi/MusicApi/obj/Debug/net5.0
