@@ -29,6 +29,10 @@ namespace MusicApi.Controllers
         public IActionResult Get(int id)
         {
             var song = _dbContext.Songs.Find(id);
+            if (song == null)
+            {
+                return NotFound("No record found against this Id");
+            }
             return Ok(song);
         }
 
@@ -46,10 +50,17 @@ namespace MusicApi.Controllers
         public IActionResult Put(int id, [FromBody] Song songObj)
         {
             var song = _dbContext.Songs.Find(id);
-            song.Title = songObj.Title;
-            song.Language = songObj.Language;
-            _dbContext.SaveChanges();
-            return Ok("Record updated successfully");
+            if (song == null)
+            {
+                return NotFound("No record found against this Id");
+            }
+            else
+            {
+                song.Title = songObj.Title;
+                song.Language = songObj.Language;
+                _dbContext.SaveChanges();
+                return Ok("Record updated successfully");
+            }
         }
 
         // DELETE: api/<SongsController>/5
@@ -57,9 +68,16 @@ namespace MusicApi.Controllers
         public IActionResult Delete(int id)
         {
             var song = _dbContext.Songs.Find(id);
-            _dbContext.Songs.Remove(song);
-            _dbContext.SaveChanges();
-            return Ok("Record Deleted");
+            if (song == null)
+            {
+                return NotFound("No record found against this Id");
+            }
+            else
+            {
+                _dbContext.Songs.Remove(song);
+                _dbContext.SaveChanges();
+                return Ok("Record Deleted");
+            }
         }
     }
 }
