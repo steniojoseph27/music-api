@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MusicApi.Data;
+using MusicApi.Helpers;
 using MusicApi.Models;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace MusicApi.Controllers
@@ -38,10 +41,27 @@ namespace MusicApi.Controllers
             return Ok(song);
         }
 
-        // POST: api/<SongsController>
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Song song)
+        [HttpGet("[action]/{id}")]
+        public int Test(int id)
         {
+            return id;
+        }
+
+
+        // POST: api/<SongsController>
+        //[HttpPost]
+        //public async Task<IActionResult> Post([FromBody] Song song)
+        //{
+        //    await _dbContext.Songs.AddAsync(song);
+        //    await _dbContext.SaveChangesAsync();
+        //    return StatusCode(StatusCodes.Status201Created);
+        //}
+
+        [HttpPost]
+        public async Task<IActionResult> Post([FromForm] Song song)
+        {
+            var imageUrl = await FileHelper.UploadImage(song.Image);
+            song.ImageUrl = imageUrl;
             await _dbContext.Songs.AddAsync(song);
             await _dbContext.SaveChangesAsync();
             return StatusCode(StatusCodes.Status201Created);
